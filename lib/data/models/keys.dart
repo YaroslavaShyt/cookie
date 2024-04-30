@@ -1,6 +1,7 @@
 class Keys{
   static const keyName = "name";
   static const keyVideos = "videos";
+  static const keyImage = "image";
 
   static const keyCode = "statusCode";
   static const keySuccess = "success";

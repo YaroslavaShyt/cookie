@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:test_pr/app/screens/error/error_factory.dart';
+import 'package:test_pr/app/screens/home/home_view_model.dart';
+import 'package:test_pr/app/screens/home/widgets/dish_card.dart';
+import 'package:test_pr/domain/dish/idishes_data.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late VideoPlayerController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = VideoPlayerController.networkUrl(Uri.parse("https://cdn.pixabay.com/video/2024/02/11/200157-912127896_large.mp4"))..initialize();
-  }
+class HomeScreen extends StatelessWidget {
+  final HomeViewModel viewModel;
+  const HomeScreen({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       body: Center(
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-            SizedBox(height: 200, width: 200, child: VideoPlayer(controller),)
-          ],
-        ),
+        child: StreamBuilder<IDishData>(
+            stream: viewModel.dishesDataStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                ErrorFactory.build();
+              }
+              if (snapshot.hasData) {
+                IDishData dishData = snapshot.data!;
+                return ListView.builder(
+                    itemCount: dishData.dishesList.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                          onTap: () => viewModel.navigateToVideos(data: dishData),
+                          child: DishCard(dish: dishData.dishesList[index]));
+                    });
+              }
+              return const CircularProgressIndicator();
+            }),
       ),
-
     );
   }
 }

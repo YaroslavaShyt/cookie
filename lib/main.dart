@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:test_pr/app/routing/router/app_router.dart';
 import 'package:test_pr/app/routing/navigation_util/inavigation_util.dart';
 import 'package:test_pr/app/routing/navigation_util/navigation_util.dart';
+import 'package:test_pr/app/services/locator/locator.dart';
 import 'package:test_pr/firebase_options.dart';
 import 'app/app.dart';
 
@@ -12,8 +13,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  initLocator();
+
   final INavigationUtil navigationUtil = NavigationUtil();
   final AppRouter appRouter = AppRouter();
+
   runApp(MultiProvider(
       providers: [Provider.value(value: navigationUtil)],
       child: App(appRouter: appRouter,)));
