@@ -14,7 +14,7 @@ class VideoCarouselUtil {
   bool get isCurrentVideoPlaying => _isCurrentVideoPlaying;
 
   bool get isControllersInitialized => _isControllersInitialized;
-
+ 
   Future<List<VideoPlayerController>> initializeControllers(
       {required List<dynamic> videoPaths}) async {
     videoPlayerControllers.clear();
