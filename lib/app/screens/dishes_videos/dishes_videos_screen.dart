@@ -13,8 +13,6 @@ class DishesVideosScreen extends StatelessWidget {
         initControllers: viewModel.initControllers,
         disposeControllers: viewModel.disposeControllers,
         data: viewModel.dishData,
-        isCurrentVideoPlaying: viewModel.isCurrentVideoPlaying,
-        playOrPause: viewModel.playOrPauseVideo,
       ),
     );
   }

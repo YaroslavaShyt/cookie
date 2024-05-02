@@ -6,16 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class DishVideoList extends StatefulWidget {
-  final bool isCurrentVideoPlaying;
-  final Function(int) playOrPause;
   final Function(List<dynamic>) initControllers;
   final Function() disposeControllers;
   final IDish dish;
 
   const DishVideoList(
       {super.key,
-      required this.isCurrentVideoPlaying,
-      required this.playOrPause,
       required this.initControllers,
       required this.disposeControllers,
       required this.dish});
@@ -65,10 +61,7 @@ class _DishVideoListState extends State<DishVideoList> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: MainVideoPlayer(
-                          index: index,
-                          isVideoPlaying: widget.isCurrentVideoPlaying,
                           controller: snapshot.data![index],
-                          playOrPause: widget.playOrPause,
                         ),
                       );
                     },

@@ -10,13 +10,6 @@ class DishesVideoViewModel extends BaseChangeNotifier {
       {required this.dishData, required VideoCarouselUtil videoCarouselUtil})
       : _videoCarouselUtil = videoCarouselUtil;
 
-  void playOrPauseVideo(int index) {
-    _videoCarouselUtil.playOrPauseVideo(index: index);
-    notifyListeners();
-  }
-
-  bool get isCurrentVideoPlaying => _videoCarouselUtil.isCurrentVideoPlaying;
-
   Future<List<VideoPlayerController>> initControllers(
       List<dynamic> videoPaths) async {
     return await _videoCarouselUtil.initializeControllers(

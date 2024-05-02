@@ -2,30 +2,39 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
 class MainVideoPlayer extends StatefulWidget {
-  final bool isVideoPlaying;
   final VideoPlayerController controller;
-  final Function(int) playOrPause;
-  final int index;
 
-  const MainVideoPlayer(
-      {super.key,
-      required this.isVideoPlaying,
-      required this.controller,
-      required this.playOrPause,
-      required this.index});
+  const MainVideoPlayer({
+    super.key,
+    required this.controller,
+  });
 
   @override
   State<MainVideoPlayer> createState() => _MainVideoPlayerState();
 }
 
 class _MainVideoPlayerState extends State<MainVideoPlayer> {
+  bool _isVideoPlaying = false;
+
   @override
   void initState() {
     super.initState();
     widget.controller.addListener(() {
-      if (widget.controller.value.isPlaying && !widget.isVideoPlaying) {
-        widget.playOrPause(widget.index);
+      if (!widget.controller.value.isPlaying &&
+          widget.controller.value.isInitialized &&
+          widget.controller.value.duration ==
+              widget.controller.value.position) {
+        setState(() {
+          _isVideoPlaying = false;
+        });
       }
+    });
+  }
+
+  void playOrPauseVideo() {
+    _isVideoPlaying ? widget.controller.pause() : widget.controller.play();
+    setState(() {
+      _isVideoPlaying = !_isVideoPlaying;
     });
   }
 
@@ -38,12 +47,12 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
         child: Stack(
           children: [
             GestureDetector(
-              onTap: () => widget.playOrPause(widget.index),
+              onTap: playOrPauseVideo,
               child: Stack(
                 alignment: AlignmentDirectional.bottomEnd,
                 children: [
                   VideoPlayer(widget.controller),
-                  if (!widget.isVideoPlaying)
+                  if (!_isVideoPlaying) ...[
                     const Center(
                       child: Icon(
                         Icons.play_arrow,
@@ -51,6 +60,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                         color: Colors.white,
                       ),
                     ),
+                  ],
                   VideoProgressIndicator(
                     widget.controller,
                     allowScrubbing: true,

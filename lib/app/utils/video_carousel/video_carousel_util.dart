@@ -5,12 +5,9 @@ import 'package:video_player/video_player.dart';
 
 class VideoCarouselUtil {
   final CacheUtil _cacheUtil;
-  bool _isCurrentVideoPlaying = false;
   List<VideoPlayerController> videoPlayerControllers = [];
 
   VideoCarouselUtil({required CacheUtil cacheUtil}) : _cacheUtil = cacheUtil;
-
-  bool get isCurrentVideoPlaying => _isCurrentVideoPlaying;
 
 
   Future<List<VideoPlayerController>> initializeControllers(
@@ -35,10 +32,5 @@ class VideoCarouselUtil {
     }
   }
 
-  void playOrPauseVideo({required int index}) {
-    _isCurrentVideoPlaying
-        ? videoPlayerControllers[index].pause()
-        : videoPlayerControllers[index].play();
-    _isCurrentVideoPlaying = !_isCurrentVideoPlaying;
-  }
+
 }
