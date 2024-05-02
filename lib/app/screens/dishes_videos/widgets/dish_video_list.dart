@@ -8,12 +8,18 @@ import 'package:video_player/video_player.dart';
 
 class DishVideoList extends StatefulWidget {
   final VideoCarouselUtil videoCarouselUtil;
+  final Function({required String categoryName, required int index})
+      saveWatchedVideoHistory;
+  final Function({required String categoryName}) loadWatchedVideoHistory;
+
   final IDish dish;
 
   const DishVideoList(
       {super.key,
       required this.videoCarouselUtil,
-      required this.dish});
+      required this.dish,
+      required this.saveWatchedVideoHistory,
+      required this.loadWatchedVideoHistory});
 
   @override
   State<DishVideoList> createState() => _DishVideoListState();
@@ -23,12 +29,27 @@ class _DishVideoListState extends State<DishVideoList> {
   PageController? horizontalPageController;
   late Future<List<VideoPlayerController>> initOperation;
   int currentIndex = 0;
+  int lastSavedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    horizontalPageController = PageController(viewportFraction: 0.8);
-    initOperation = widget.videoCarouselUtil.initializeControllers(videoPaths: widget.dish.videos);
+    widget
+        .loadWatchedVideoHistory(categoryName: widget.dish.name)
+        .then((index) {
+      log("INDEX $index");
+      setState(() {
+        if (index != null && lastSavedIndex != widget.dish.videos.length - 1) {
+          lastSavedIndex = index;
+          currentIndex = lastSavedIndex;
+        }
+        horizontalPageController =
+            PageController(viewportFraction: 0.8, initialPage: lastSavedIndex);
+      });
+    });
+
+    initOperation = widget.videoCarouselUtil
+        .initializeControllers(videoPaths: widget.dish.videos);
   }
 
   @override
@@ -53,6 +74,8 @@ class _DishVideoListState extends State<DishVideoList> {
                       setState(() {
                         currentIndex = index;
                       });
+                      widget.saveWatchedVideoHistory(
+                          categoryName: widget.dish.name, index: index);
                     },
                     controller: horizontalPageController,
                     scrollDirection: Axis.horizontal,

@@ -15,15 +15,15 @@ class LocalStorage implements ILocalStorage {
   }
 
   @override
-  Future<String> read({required String key}) async {
+  Future<dynamic> read({required String key}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String data = prefs.getString(key) ?? '';
+    dynamic data = prefs.getInt(key);
     return data;
   }
 
   @override
   Future<void> save({required String key, required dynamic data}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, data);
+    await prefs.setInt(key, data);
   }
 }

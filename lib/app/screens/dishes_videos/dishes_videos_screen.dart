@@ -10,8 +10,9 @@ class DishesVideosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DishCategoriesList(
-       
         data: viewModel.dishData,
+        saveWatchedVideoHistory: viewModel.saveWatchedVideoHistory,
+        loadWatchedVideoHistory: viewModel.loadWatchedVideoHistory,
       ),
     );
   }

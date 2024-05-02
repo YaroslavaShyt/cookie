@@ -7,13 +7,17 @@ import 'package:cookie/app/screens/dishes_videos/widgets/dish_video_list.dart';
 import 'package:cookie/domain/dish/idishes_data.dart';
 
 class DishCategoriesList extends StatefulWidget {
+  final Function({required String categoryName, required int index})
+      saveWatchedVideoHistory;
+  final Function({required String categoryName}) loadWatchedVideoHistory;
   final IDishData data;
 
-  const DishCategoriesList(
-      {super.key,
-      required this.data,
-     
-     });
+  const DishCategoriesList({
+    super.key,
+    required this.data,
+    required this.saveWatchedVideoHistory,
+    required this.loadWatchedVideoHistory,
+  });
 
   @override
   State<DishCategoriesList> createState() => _DishCategoriesListState();
@@ -47,7 +51,8 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
           return DishVideoList(
               videoCarouselUtil: locator.get<VideoCarouselUtil>(),
               dish: widget.data.dishesList[index],
-              );
+              saveWatchedVideoHistory: widget.saveWatchedVideoHistory,
+              loadWatchedVideoHistory: widget.loadWatchedVideoHistory);
         });
   }
 }
