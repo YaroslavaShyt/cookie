@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cookie/app/screens/dishes_videos/dishes_videos_view_model.dart';
-import 'package:cookie/app/screens/dishes_videos/widgets/vertical_page_view.dart';
+import 'package:cookie/app/screens/dishes_videos/widgets/dish_categories_list.dart';
 
 class DishesVideosScreen extends StatelessWidget {
   final DishesVideoViewModel viewModel;
@@ -9,8 +9,13 @@ class DishesVideosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: VerticalPageView(
+      body: DishCategoriesList(
+        initControllers: viewModel.initControllers,
+        disposeControllers: viewModel.disposeControllers,
+        videoPlayerControllers: viewModel.videoPlayerControllers,
         data: viewModel.dishData,
+        isCurrentVideoPlaying: viewModel.isCurrentVideoPlaying,
+        playOrPause: viewModel.playOrPauseVideo,
       ),
     );
   }

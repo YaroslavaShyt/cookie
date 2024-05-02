@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cookie/app/utils/caching/cache_util.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
@@ -14,7 +15,9 @@ class VideoCarouselUtil {
 
   bool get isControllersInitialized => _isControllersInitialized;
 
-  Future<void> initializeControllers({required List<String> videoPaths}) async {
+  Future<List<VideoPlayerController>> initializeControllers(
+      {required List<dynamic> videoPaths}) async {
+    videoPlayerControllers.clear();
     for (String path in videoPaths) {
       FileInfo? fileInfo = await _cacheUtil.getFileFromCache(key: path);
       if (fileInfo != null) {
@@ -27,11 +30,13 @@ class VideoCarouselUtil {
     if (videoPlayerControllers.isNotEmpty) {
       _isControllersInitialized = true;
     }
+    return videoPlayerControllers;
   }
 
   void disposeControllers() {
     for (VideoPlayerController controller in videoPlayerControllers) {
       controller.dispose();
+      log("DISPOSED: ${videoPlayerControllers.indexOf(controller)}");
     }
   }
 
