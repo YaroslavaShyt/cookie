@@ -12,7 +12,6 @@ class DishesVideosScreen extends StatelessWidget {
       body: DishCategoriesList(
         initControllers: viewModel.initControllers,
         disposeControllers: viewModel.disposeControllers,
-        videoPlayerControllers: viewModel.videoPlayerControllers,
         data: viewModel.dishData,
         isCurrentVideoPlaying: viewModel.isCurrentVideoPlaying,
         playOrPause: viewModel.playOrPauseVideo,

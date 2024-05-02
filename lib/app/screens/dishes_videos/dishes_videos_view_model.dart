@@ -24,8 +24,4 @@ class DishesVideoViewModel extends BaseChangeNotifier {
   }
 
   Function() get disposeControllers => _videoCarouselUtil.disposeControllers;
-
-  List<VideoPlayerController> get videoPlayerControllers =>
-      _videoCarouselUtil.videoPlayerControllers;
-
 }

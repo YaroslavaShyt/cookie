@@ -6,15 +6,13 @@ import 'package:video_player/video_player.dart';
 class VideoCarouselUtil {
   final CacheUtil _cacheUtil;
   bool _isCurrentVideoPlaying = false;
-  bool _isControllersInitialized = false;
   List<VideoPlayerController> videoPlayerControllers = [];
 
   VideoCarouselUtil({required CacheUtil cacheUtil}) : _cacheUtil = cacheUtil;
 
   bool get isCurrentVideoPlaying => _isCurrentVideoPlaying;
 
-  bool get isControllersInitialized => _isControllersInitialized;
- 
+
   Future<List<VideoPlayerController>> initializeControllers(
       {required List<dynamic> videoPaths}) async {
     videoPlayerControllers.clear();
@@ -26,9 +24,6 @@ class VideoCarouselUtil {
         await controller.initialize();
         videoPlayerControllers.add(controller);
       }
-    }
-    if (videoPlayerControllers.isNotEmpty) {
-      _isControllersInitialized = true;
     }
     return videoPlayerControllers;
   }
