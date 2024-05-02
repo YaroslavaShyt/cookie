@@ -1,5 +1,3 @@
-import 'package:cookie/app/services/locator/locator.dart';
-import 'package:cookie/app/utils/video_carousel/video_carousel_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:cookie/app/screens/dishes_videos/dishes_videos_screen.dart';
@@ -10,8 +8,7 @@ class DishesVideosFactory {
   static Widget build({required IDishData dishData}) {
     return ChangeNotifierProvider(
         create: (_) => DishesVideoViewModel(
-          dishData: dishData,
-          videoCarouselUtil: locator.get<VideoCarouselUtil>()
+          dishData: dishData,      
         ),
         child: Consumer<DishesVideoViewModel>(
           builder: (context, model, child) {

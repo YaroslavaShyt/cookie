@@ -10,8 +10,7 @@ class DishesVideosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DishCategoriesList(
-        initControllers: viewModel.initControllers,
-        disposeControllers: viewModel.disposeControllers,
+       
         data: viewModel.dishData,
       ),
     );

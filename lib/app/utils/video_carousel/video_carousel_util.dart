@@ -13,6 +13,7 @@ class VideoCarouselUtil {
   Future<List<VideoPlayerController>> initializeControllers(
       {required List<dynamic> videoPaths}) async {
     videoPlayerControllers.clear();
+    log("VIDEO PATHS: $videoPaths");
     for (String path in videoPaths) {
       FileInfo? fileInfo = await _cacheUtil.getFileFromCache(key: path);
       if (fileInfo != null) {

@@ -1,17 +1,18 @@
+import 'dart:developer';
+
+import 'package:cookie/app/services/locator/locator.dart';
+import 'package:cookie/app/utils/video_carousel/video_carousel_util.dart';
 import 'package:flutter/material.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/dish_video_list.dart';
 import 'package:cookie/domain/dish/idishes_data.dart';
 
 class DishCategoriesList extends StatefulWidget {
   final IDishData data;
-  final Function(List<dynamic>) initControllers;
-  final Function() disposeControllers;
 
   const DishCategoriesList(
       {super.key,
       required this.data,
-      required this.initControllers,
-      required this.disposeControllers,
+     
      });
 
   @override
@@ -42,9 +43,9 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
         itemCount: widget.data.dishesList.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
+          log("CATEGORY NAME: ${widget.data.dishesList[index].name}");
           return DishVideoList(
-              initControllers: widget.initControllers,
-              disposeControllers: widget.disposeControllers,
+              videoCarouselUtil: locator.get<VideoCarouselUtil>(),
               dish: widget.data.dishesList[index],
               );
         });
