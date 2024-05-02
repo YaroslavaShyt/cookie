@@ -27,6 +27,10 @@ class CacheUtil {
 
   Future<FileInfo?> getFileFromCache({required String key}) async {
     FileInfo? fileInfo = await kCacheManager.getFileFromCache(key);
+    if(fileInfo == null){
+      await downloadFile(url: key);
+      fileInfo = await kCacheManager.getFileFromCache(key);
+    }
     return fileInfo;
   }
 
