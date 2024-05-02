@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_pr/domain/dish/idish.dart';
+import 'package:cookie/domain/dish/idish.dart';
 
 class DishCard extends StatelessWidget {
   final IDish dish;

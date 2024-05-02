@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_pr/app/routing/navigation_util/inavigation_util.dart';
+import 'package:cookie/app/routing/navigation_util/inavigation_util.dart';
 
 class NavigationUtil implements INavigationUtil {
   @override

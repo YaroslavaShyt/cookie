@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_pr/app/routing/navigation_util/inavigation_util.dart';
-import 'package:test_pr/app/screens/home/home_screen.dart';
-import 'package:test_pr/app/screens/home/home_view_model.dart';
-import 'package:test_pr/app/services/locator/locator.dart';
-import 'package:test_pr/domain/dish/idish_repository.dart';
+import 'package:cookie/app/routing/navigation_util/inavigation_util.dart';
+import 'package:cookie/app/screens/home/home_screen.dart';
+import 'package:cookie/app/screens/home/home_view_model.dart';
+import 'package:cookie/app/services/locator/locator.dart';
+import 'package:cookie/domain/dish/idish_repository.dart';
 
 class HomeFactory {
   static Widget build() {

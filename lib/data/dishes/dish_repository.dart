@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_pr/app/services/networking/endpoints.dart';
-import 'package:test_pr/data/models/keys.dart';
-import 'package:test_pr/domain/dish/idish.dart';
-import 'package:test_pr/domain/dish/idish_repository.dart';
-import 'package:test_pr/domain/dish/idishes_data.dart';
+import 'package:cookie/app/services/networking/endpoints.dart';
+import 'package:cookie/data/models/keys.dart';
+import 'package:cookie/domain/dish/idish.dart';
+import 'package:cookie/domain/dish/idish_repository.dart';
+import 'package:cookie/domain/dish/idishes_data.dart';
 import 'dart:async';
 import 'dish.dart';
 import 'dish_data.dart';

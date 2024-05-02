@@ -1,4 +1,4 @@
-import 'package:test_pr/domain/models/ibase_model.dart';
+import 'package:cookie/domain/models/ibase_model.dart';
 
 abstract interface class IBaseResponse implements IBaseModel{
   final int? code;

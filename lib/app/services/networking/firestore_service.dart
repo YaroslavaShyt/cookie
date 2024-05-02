@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_pr/data/models/base_response.dart';
-import 'package:test_pr/domain/models/ibase_response.dart';
-import 'package:test_pr/data/models/keys.dart';
-import 'package:test_pr/domain/services/inetwork_service.dart';
+import 'package:cookie/data/models/base_response.dart';
+import 'package:cookie/domain/models/ibase_response.dart';
+import 'package:cookie/data/models/keys.dart';
+import 'package:cookie/domain/services/inetwork_service.dart';
 
 class FirestoreService implements INetworkService {
   final FirebaseFirestore _firestore;

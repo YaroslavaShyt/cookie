@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_pr/app/screens/dishes_videos/dishes_videos_view_model.dart';
-import 'package:test_pr/app/screens/dishes_videos/widgets/vertical_page_view.dart';
+import 'package:cookie/app/screens/dishes_videos/dishes_videos_view_model.dart';
+import 'package:cookie/app/screens/dishes_videos/widgets/vertical_page_view.dart';
 
 class DishesVideosScreen extends StatelessWidget {
   final DishesVideoViewModel viewModel;

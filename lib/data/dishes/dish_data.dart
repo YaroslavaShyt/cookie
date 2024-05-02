@@ -1,5 +1,5 @@
-import 'package:test_pr/domain/dish/idish.dart';
-import 'package:test_pr/domain/dish/idishes_data.dart';
+import 'package:cookie/domain/dish/idish.dart';
+import 'package:cookie/domain/dish/idishes_data.dart';
 
 class DishData implements IDishData{
   @override

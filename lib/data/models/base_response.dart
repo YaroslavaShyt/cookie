@@ -1,5 +1,5 @@
-import 'package:test_pr/domain/models/ibase_response.dart';
-import 'package:test_pr/data/models/keys.dart';
+import 'package:cookie/domain/models/ibase_response.dart';
+import 'package:cookie/data/models/keys.dart';
 
 class BaseResponse implements IBaseResponse {
   @override

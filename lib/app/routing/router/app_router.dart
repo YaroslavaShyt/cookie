@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_pr/app/routing/router/routes.dart';
-import 'package:test_pr/app/screens/dishes_videos/dishes_videos_factory.dart';
-import 'package:test_pr/app/screens/error/error_factory.dart';
-import 'package:test_pr/app/screens/home/home_factory.dart';
-import 'package:test_pr/domain/dish/idishes_data.dart';
+import 'package:cookie/app/routing/router/routes.dart';
+import 'package:cookie/app/screens/dishes_videos/dishes_videos_factory.dart';
+import 'package:cookie/app/screens/error/error_factory.dart';
+import 'package:cookie/app/screens/home/home_factory.dart';
+import 'package:cookie/domain/dish/idishes_data.dart';
 
 class AppRouter{
   Route? onGenerateRoute(RouteSettings routeSettings){

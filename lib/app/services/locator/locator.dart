@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import 'package:test_pr/data/dishes/dish_repository.dart';
-import 'package:test_pr/domain/dish/idish_repository.dart';
+import 'package:cookie/data/dishes/dish_repository.dart';
+import 'package:cookie/domain/dish/idish_repository.dart';
 
 final locator = GetIt.I;
 

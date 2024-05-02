@@ -1,5 +1,5 @@
-import 'package:test_pr/app/common/base_change_notifier/base_change_notifier.dart';
-import 'package:test_pr/domain/dish/idishes_data.dart';
+import 'package:cookie/app/common/base_change_notifier/base_change_notifier.dart';
+import 'package:cookie/domain/dish/idishes_data.dart';
 
 class DishesVideoViewModel extends BaseChangeNotifier{
   final IDishData dishData;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test_pr/app/screens/error/error_factory.dart';
-import 'package:test_pr/app/screens/home/home_view_model.dart';
-import 'package:test_pr/app/screens/home/widgets/dish_card.dart';
-import 'package:test_pr/domain/dish/idishes_data.dart';
+import 'package:cookie/app/screens/error/error_factory.dart';
+import 'package:cookie/app/screens/home/home_view_model.dart';
+import 'package:cookie/app/screens/home/widgets/dish_card.dart';
+import 'package:cookie/domain/dish/idishes_data.dart';
 
 class HomeScreen extends StatelessWidget {
   final HomeViewModel viewModel;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_pr/app/screens/dishes_videos/widgets/horizontal_page_view.dart';
-import 'package:test_pr/domain/dish/idishes_data.dart';
+import 'package:cookie/app/screens/dishes_videos/widgets/horizontal_page_view.dart';
+import 'package:cookie/domain/dish/idishes_data.dart';
 
 class VerticalPageView extends StatelessWidget {
   final IDishData data;

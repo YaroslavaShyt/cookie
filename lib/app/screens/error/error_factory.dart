@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_pr/app/screens/error/error_screen.dart';
-import 'package:test_pr/app/screens/error/error_view_model.dart';
+import 'package:cookie/app/screens/error/error_screen.dart';
+import 'package:cookie/app/screens/error/error_view_model.dart';
 
 class ErrorFactory {
   static Widget build() {
