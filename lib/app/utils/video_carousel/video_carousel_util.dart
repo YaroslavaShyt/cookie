@@ -9,21 +9,16 @@ class VideoCarouselUtil {
 
   VideoCarouselUtil({required CacheUtil cacheUtil}) : _cacheUtil = cacheUtil;
 
-
-  Future<List<VideoPlayerController>> initializeControllers(
-      {required List<dynamic> videoPaths}) async {
-    videoPlayerControllers.clear();
-    log("VIDEO PATHS: $videoPaths");
-    for (String path in videoPaths) {
-      FileInfo? fileInfo = await _cacheUtil.getFileFromCache(key: path);
-      if (fileInfo != null) {
-        VideoPlayerController controller =
-            VideoPlayerController.file(fileInfo.file);
-        await controller.initialize();
-        videoPlayerControllers.add(controller);
-      }
+  Future<VideoPlayerController?> initializeController(
+      {required String path}) async {
+    FileInfo? fileInfo = await _cacheUtil.getFileFromCache(key: path);
+    if (fileInfo != null) {
+      VideoPlayerController controller =
+          VideoPlayerController.file(fileInfo.file);
+      await controller.initialize();
+      return controller;
     }
-    return videoPlayerControllers;
+    return null;
   }
 
   void disposeControllers() {
@@ -32,6 +27,4 @@ class VideoCarouselUtil {
       log("DISPOSED: ${videoPlayerControllers.indexOf(controller)}");
     }
   }
-
-
 }

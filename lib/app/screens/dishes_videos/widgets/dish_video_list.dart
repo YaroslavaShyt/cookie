@@ -1,25 +1,26 @@
 import 'dart:developer';
 import 'package:cookie/app/screens/dishes_videos/widgets/current_video_indicators.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/main_video_player.dart';
+import 'package:cookie/app/services/locator/locator.dart';
+import 'package:cookie/app/utils/caching/cache_util.dart';
 import 'package:cookie/app/utils/video_carousel/video_carousel_util.dart';
 import 'package:cookie/domain/dish/idish.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class DishVideoList extends StatefulWidget {
-  final VideoCarouselUtil videoCarouselUtil;
   final Function({required String categoryName, required int index})
       saveWatchedVideoHistory;
   final Function({required String categoryName}) loadWatchedVideoHistory;
 
   final IDish dish;
-
+  final bool isCurrent;
   const DishVideoList(
       {super.key,
-      required this.videoCarouselUtil,
       required this.dish,
       required this.saveWatchedVideoHistory,
-      required this.loadWatchedVideoHistory});
+      required this.loadWatchedVideoHistory,
+      required this.isCurrent});
 
   @override
   State<DishVideoList> createState() => _DishVideoListState();
@@ -44,68 +45,55 @@ class _DishVideoListState extends State<DishVideoList> {
           currentIndex = lastSavedIndex;
         }
         horizontalPageController =
-            PageController(viewportFraction: 0.8, initialPage: lastSavedIndex);
+            PageController(viewportFraction: 0.8, initialPage: currentIndex);
       });
     });
 
-    initOperation = widget.videoCarouselUtil
-        .initializeControllers(videoPaths: widget.dish.videos);
+    // initOperation =
+    //     widget.videoCarouselUtil.initializeControllers(videoPaths: widget.dish.videos);
   }
 
   @override
   void dispose() {
     log("DISPOSING VIDEO CONTROLLERS");
-    widget.videoCarouselUtil.disposeControllers();
+    // widget.videoCarouselUtil.disposeControllers();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     log("DISH VIDEO LIST CATEGORY: ${widget.dish.name}");
-    return FutureBuilder<List<VideoPlayerController>>(
-        future: initOperation,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                Expanded(
-                  child: PageView.builder(
-                    onPageChanged: (index) {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                      widget.saveWatchedVideoHistory(
-                          categoryName: widget.dish.name, index: index);
-                    },
-                    controller: horizontalPageController,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: MainVideoPlayer(
-                          controller: snapshot.data![index],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                    height: 50,
-                    child: CurrentVideoIndicators(
-                        quantity: snapshot.data!.length,
-                        selectedIndex: currentIndex)),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child:
-                  Text("Не вдалось завантажити: ${snapshot.error.toString()}"),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+    return Column(
+      children: [
+        Expanded(
+          child: PageView.builder(
+            onPageChanged: (index) async {
+              setState(() {
+                currentIndex = index;
+              });
+              widget.saveWatchedVideoHistory(
+                  categoryName: widget.dish.name, index: index);
+            },
+            controller: horizontalPageController,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.isCurrent ? widget.dish.videos.length : 1,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: MainVideoPlayer(
+                    videoCarouselUtil:
+                        VideoCarouselUtil(cacheUtil: locator.get<CacheUtil>()),
+                    videoUrl: widget.dish.videos[index]),
+              );
+            },
+          ),
+        ),
+        SizedBox(
+            height: 50,
+            child: CurrentVideoIndicators(
+                quantity: widget.dish.videos.length,
+                selectedIndex: currentIndex)),
+      ],
+    );
   }
 }

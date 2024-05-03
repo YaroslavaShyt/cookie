@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cookie/app/services/locator/locator.dart';
+import 'package:cookie/app/utils/caching/cache_util.dart';
 import 'package:cookie/app/utils/video_carousel/video_carousel_util.dart';
 import 'package:flutter/material.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/dish_video_list.dart';
@@ -25,6 +26,7 @@ class DishCategoriesList extends StatefulWidget {
 
 class _DishCategoriesListState extends State<DishCategoriesList> {
   PageController? verticalPageController;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -43,13 +45,18 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+      onPageChanged: (index){
+        setState(() {
+          currentIndex = index;
+        });
+      },
         controller: verticalPageController,
         itemCount: widget.data.dishesList.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           log("CATEGORY NAME: ${widget.data.dishesList[index].name}");
           return DishVideoList(
-              videoCarouselUtil: locator.get<VideoCarouselUtil>(),
+              isCurrent: currentIndex == index ,
               dish: widget.data.dishesList[index],
               saveWatchedVideoHistory: widget.saveWatchedVideoHistory,
               loadWatchedVideoHistory: widget.loadWatchedVideoHistory);
