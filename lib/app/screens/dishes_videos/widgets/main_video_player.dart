@@ -18,7 +18,7 @@ class MainVideoPlayer extends StatefulWidget {
 class _MainVideoPlayerState extends State<MainVideoPlayer> {
   bool _isVideoPlaying = false;
   bool _isInitialized = false;
-  late VideoPlayerController? _controller;
+  VideoPlayerController? _controller;
   final CacheUtil _cacheUtil = CacheUtil();
 
   @override
@@ -30,7 +30,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
 
   @override
   void dispose() {
-    if (_controller != null) {
+    if (_controller != null ) {
       _controller!.dispose();
     }
     log("VIDEO PLAYER DISPOSED");
@@ -80,7 +80,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return _isInitialized
+    return _isInitialized && _controller != null && _controller!.value.isInitialized
         ? SafeArea(
             top: false,
             left: false,

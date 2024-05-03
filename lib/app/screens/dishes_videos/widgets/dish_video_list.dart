@@ -37,19 +37,20 @@ class _DishVideoListState extends State<DishVideoList> {
         .then((index) {
       log("SAVED INDEX $index");
       setState(() {
-        if (index != null && lastSavedIndex != widget.dish.videos.length - 1) {
-          lastSavedIndex = index;
-          currentIndex = lastSavedIndex;
-        }
-        horizontalPageController =
-            PageController(viewportFraction: 0.8, initialPage: lastSavedIndex);
+        lastSavedIndex = index ?? 0;
+        currentIndex = widget.isCurrent ? lastSavedIndex : 0;
+        
       });
+      horizontalPageController = PageController(
+        viewportFraction: 0.8,
+        initialPage: currentIndex,
+      );
     });
   }
 
   @override
   void dispose() {
-    if(horizontalPageController != null){
+    if (horizontalPageController != null) {
       horizontalPageController!.dispose();
     }
     super.dispose();
@@ -75,8 +76,7 @@ class _DishVideoListState extends State<DishVideoList> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: MainVideoPlayer(
-                    videoUrl: widget.dish.videos[index]),
+                child: MainVideoPlayer(videoUrl: widget.dish.videos[index]),
               );
             },
           ),
