@@ -1,9 +1,6 @@
 import 'dart:developer';
 import 'package:cookie/app/screens/dishes_videos/widgets/current_video_indicators.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/main_video_player.dart';
-import 'package:cookie/app/services/locator/locator.dart';
-import 'package:cookie/app/utils/caching/cache_util.dart';
-import 'package:cookie/app/utils/video_carousel/video_carousel_util.dart';
 import 'package:cookie/domain/dish/idish.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -38,25 +35,23 @@ class _DishVideoListState extends State<DishVideoList> {
     widget
         .loadWatchedVideoHistory(categoryName: widget.dish.name)
         .then((index) {
-      log("INDEX $index");
+      log("SAVED INDEX $index");
       setState(() {
         if (index != null && lastSavedIndex != widget.dish.videos.length - 1) {
           lastSavedIndex = index;
           currentIndex = lastSavedIndex;
         }
         horizontalPageController =
-            PageController(viewportFraction: 0.8, initialPage: currentIndex);
+            PageController(viewportFraction: 0.8, initialPage: lastSavedIndex);
       });
     });
-
-    // initOperation =
-    //     widget.videoCarouselUtil.initializeControllers(videoPaths: widget.dish.videos);
   }
 
   @override
   void dispose() {
-    log("DISPOSING VIDEO CONTROLLERS");
-    // widget.videoCarouselUtil.disposeControllers();
+    if(horizontalPageController != null){
+      horizontalPageController!.dispose();
+    }
     super.dispose();
   }
 
@@ -81,8 +76,6 @@ class _DishVideoListState extends State<DishVideoList> {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: MainVideoPlayer(
-                    videoCarouselUtil:
-                        VideoCarouselUtil(cacheUtil: locator.get<CacheUtil>()),
                     videoUrl: widget.dish.videos[index]),
               );
             },
