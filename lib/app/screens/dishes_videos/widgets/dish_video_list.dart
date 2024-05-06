@@ -2,21 +2,19 @@ import 'dart:developer';
 import 'package:cookie/app/screens/dishes_videos/widgets/current_video_indicators.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/main_video_player.dart';
 import 'package:cookie/domain/dish/idish.dart';
+import 'package:cookie/domain/services/ivideo_player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class DishVideoList extends StatefulWidget {
-  final Function({required String categoryName, required int index})
-      saveWatchedVideoHistory;
-  final Function({required String categoryName}) loadWatchedVideoHistory;
+  final IVideoPlayerService videoPlayerService;
 
   final IDish dish;
   final bool isCurrent;
   const DishVideoList(
       {super.key,
       required this.dish,
-      required this.saveWatchedVideoHistory,
-      required this.loadWatchedVideoHistory,
+      required this.videoPlayerService,
       required this.isCurrent});
 
   @override
@@ -32,18 +30,21 @@ class _DishVideoListState extends State<DishVideoList> {
   @override
   void initState() {
     super.initState();
-    widget
-        .loadWatchedVideoHistory(categoryName: widget.dish.name)
+    widget.videoPlayerService
+        .loadLastWatchedVideoIndex(categoryName: widget.dish.name)
         .then((index) {
       log("SAVED INDEX $index");
-      setState(() {
-        lastSavedIndex = index ?? 0;
-        currentIndex = widget.isCurrent ? lastSavedIndex : 0;
-        
-      });
-      horizontalPageController = PageController(
-        viewportFraction: 0.8,
-        initialPage: currentIndex,
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) {
+          setState(() {
+            lastSavedIndex = index ?? 0;
+            currentIndex = widget.isCurrent ? lastSavedIndex : 0;
+          });
+          horizontalPageController = PageController(
+            viewportFraction: 0.8,
+            initialPage: currentIndex,
+          );
+        },
       );
     });
   }
@@ -67,7 +68,7 @@ class _DishVideoListState extends State<DishVideoList> {
               setState(() {
                 currentIndex = index;
               });
-              widget.saveWatchedVideoHistory(
+              await widget.videoPlayerService.saveWatchedVideoHistory(
                   categoryName: widget.dish.name, index: index);
             },
             controller: horizontalPageController,
@@ -76,7 +77,12 @@ class _DishVideoListState extends State<DishVideoList> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: MainVideoPlayer(videoUrl: widget.dish.videos[index]),
+                child: MainVideoPlayer(
+                  videoPlayerController: widget.videoPlayerService
+                      .initController(
+                          videoPath: widget.dish.videos[currentIndex]),
+                  clearController: widget.videoPlayerService.clearController,
+                ),
               );
             },
           ),

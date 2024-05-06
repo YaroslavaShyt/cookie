@@ -1,6 +1,8 @@
 import 'package:cookie/app/services/local_storage/local_storage.dart';
+import 'package:cookie/app/services/video_player/video_playe_servicer.dart';
 import 'package:cookie/app/utils/caching/cache_util.dart';
 import 'package:cookie/domain/services/ilocal_storage.dart';
+import 'package:cookie/domain/services/ivideo_player_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cookie/data/dishes/dish_repository.dart';
 import 'package:cookie/domain/dish/idish_repository.dart';
@@ -23,4 +25,6 @@ void initUtils() {
 
 void initServices() {
   locator.registerFactory<ILocalStorage>(() => LocalStorage());
+  locator.registerFactory<IVideoPlayerService>(
+      () => VideoPlayerService(localStorage: locator.get<ILocalStorage>()));
 }
