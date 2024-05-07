@@ -1,5 +1,5 @@
 import 'package:cookie/app/services/local_storage/local_storage.dart';
-import 'package:cookie/app/services/video_player/video_playe_servicer.dart';
+import 'package:cookie/app/services/video_player/video_player_service.dart';
 import 'package:cookie/app/utils/caching/cache_util.dart';
 import 'package:cookie/domain/services/ilocal_storage.dart';
 import 'package:cookie/domain/services/ivideo_player_service.dart';

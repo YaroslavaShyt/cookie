@@ -16,12 +16,13 @@ class VideoPlayerService implements IVideoPlayerService {
   void spawnControllers({required int quantity}) {
     _videoPlayerControllers =
         List.generate(quantity, (index) => VideoPlayerController.network(''));
+    print("CONTROLLERS SPAWNED: ${_videoPlayerControllers.length}");
   }
 
   @override
   VideoPlayerController initController({required String videoPath}) {
     VideoPlayerController controller = _videoPlayerControllers
-        .firstWhere((element) => element.dataSource.isEmpty);
+        .firstWhere((element) => element.dataSource == "");
     controller = VideoPlayerController.network(videoPath);
     return controller;
   }
@@ -32,6 +33,7 @@ class VideoPlayerService implements IVideoPlayerService {
   @override
   void clearController(VideoPlayerController controller) {
     controller = VideoPlayerController.network('');
+    log("CONTROLLER CLEARED");
   }
 
   @override

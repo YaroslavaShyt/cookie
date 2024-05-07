@@ -25,13 +25,13 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
     super.initState();
     log("videoPlayerController ${widget.videoPlayerController.dataSource}");
     widget.videoPlayerController.initialize().then((value) {
-     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        setState(() {
-          //   if (widget.videoPlayerController.value.isInitialized) {
-          _isInitialized = true;
-          //   }
-        });
-    //  });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (widget.videoPlayerController.value.isInitialized) {
+          setState(() {
+            _isInitialized = true;
+          });
+        }
+      });
     });
   }
 
@@ -60,7 +60,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return _isInitialized
+    return _isInitialized && widget.videoPlayerController.value.isInitialized
         ? SafeArea(
             top: false,
             left: false,

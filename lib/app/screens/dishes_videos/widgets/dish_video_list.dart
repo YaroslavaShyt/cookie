@@ -13,11 +13,11 @@ class DishVideoList extends StatefulWidget {
   final bool isCurrent;
 
   const DishVideoList({
-    Key? key,
+    super.key,
     required this.dish,
     required this.videoPlayerService,
     required this.isCurrent,
-  }) : super(key: key);
+  });
 
   @override
   State<DishVideoList> createState() => _DishVideoListState();
@@ -71,12 +71,12 @@ class _DishVideoListState extends State<DishVideoList> {
                 return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: currentIndex == index || widget.isCurrent
-                        ? Container(
-                            color: Colors.amber,
-                            height: 500,
-                            width: 500,
-                            child: Center(child: Text("data")),
-                          )
+                        ? MainVideoPlayer(
+                            videoPlayerController: widget.videoPlayerService
+                                .initController(
+                                    videoPath: widget.dish.videos[index]),
+                            clearController:
+                                widget.videoPlayerService.clearController)
                         : SizedBox());
               },
             ),

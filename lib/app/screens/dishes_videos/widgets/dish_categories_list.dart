@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:cookie/app/services/video_player/video_playe_servicer.dart';
+import 'package:cookie/app/services/video_player/video_player_service.dart';
 import 'package:cookie/domain/services/ivideo_player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/dish_video_list.dart';
@@ -28,7 +28,7 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
   void initState() {
     super.initState();
     verticalPageController = PageController(viewportFraction: 0.9);
-    widget.videoPlayerService.spawnControllers(quantity: 5);
+    widget.videoPlayerService.spawnControllers(quantity: 6);
   }
 
   @override
