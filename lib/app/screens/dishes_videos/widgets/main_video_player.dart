@@ -63,19 +63,19 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
             if (_controller!.value.isInitialized) {
               setState(() {
                 _isInitialized = true;
+                _controller!.addListener(() {
+                  if (!_controller!.value.isPlaying &&
+                      _controller!.value.isInitialized &&
+                      _controller!.value.duration ==
+                          _controller!.value.position) {
+                    setState(() {
+                      _isVideoPlaying = false;
+                    });
+                  }
+                });
                 if (widget.isCurrent) {
                   _controller!.play();
                   _isVideoPlaying = true;
-                }
-              });
-              _controller!.addListener(() {
-                if (!_controller!.value.isPlaying &&
-                    _controller!.value.isInitialized &&
-                    _controller!.value.duration ==
-                        _controller!.value.position) {
-                  setState(() {
-                    _isVideoPlaying = false;
-                  });
                 }
               });
             }
