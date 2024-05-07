@@ -72,16 +72,12 @@ class _DishVideoListState extends State<DishVideoList> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: currentIndex == index || widget.isCurrent
                         ? MainVideoPlayer(
-                          isCurrent: currentIndex == index,
+                            isCurrent:
+                                currentIndex == index && widget.isCurrent,
                             videoUrl: widget.dish.videos[index],
-                            // initController:
-                            //     widget.videoPlayerService.initController,
-                            // videoPlayerController:
-                            //     widget.videoPlayerService.controller,
-                            // clearController:
-                            //     widget.videoPlayerService.clearController
+                            videoPlayerService: widget.videoPlayerService,
                           )
-                        : SizedBox());
+                        : const SizedBox());
               },
             ),
           ),

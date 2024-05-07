@@ -16,25 +16,29 @@ class VideoPlayerService implements IVideoPlayerService {
   void spawnControllers({required int quantity}) {
     _videoPlayerControllers =
         List.generate(quantity, (index) => VideoPlayerController.network(''));
-    print("CONTROLLERS SPAWNED: ${_videoPlayerControllers.length}");
   }
 
   @override
-  VideoPlayerController initController({required String videoPath, required VideoPlayerController controller}) {
-    // VideoPlayerController controller = _videoPlayerControllers
-    //     .firstWhere((element) => element.dataSource == "");
+  VideoPlayerController initController({required String videoPath}) {
+    VideoPlayerController controller = _videoPlayerControllers
+        .firstWhere((element) => element.dataSource == "");
     controller = VideoPlayerController.contentUri(Uri.parse(videoPath));
     return controller;
   }
 
   @override
   VideoPlayerController get controller => _videoPlayerControllers
-      .firstWhere((element) => element.dataSource.isEmpty);
+      .firstWhere((element) => element.dataSource.isNotEmpty);
 
   @override
   void clearController(VideoPlayerController controller) {
     controller = VideoPlayerController.network('');
     log("CONTROLLER CLEARED");
+    print("----------------------------");
+    for (var i in _videoPlayerControllers) {
+      log("${i.dataSource}");
+    }
+    print("----------------------------");
   }
 
   @override
