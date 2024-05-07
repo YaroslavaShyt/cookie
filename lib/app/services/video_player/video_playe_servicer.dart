@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cookie/domain/services/ilocal_storage.dart';
 import 'package:cookie/domain/services/ivideo_player_service.dart';
 import 'package:flutter/material.dart';
@@ -53,5 +55,6 @@ class VideoPlayerService implements IVideoPlayerService {
       {required String categoryName, required int index}) async {
     debugPrint("IN $categoryName LAST WAS $index");
     await _localStorage.save(key: categoryName, data: index);
+    log("NEW INDEX SAVED");
   }
 }

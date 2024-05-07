@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:cookie/app/services/video_player/video_playe_servicer.dart';
 import 'package:cookie/domain/services/ivideo_player_service.dart';
@@ -42,7 +43,7 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
-        onPageChanged: (index) {
+        onPageChanged: (index) async {
           setState(() {
             currentIndex = index;
           });
@@ -53,9 +54,10 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
         itemBuilder: (context, index) {
           log("CATEGORY NAME: ${widget.data.dishesList[index].name}");
           return DishVideoList(
-              isCurrent: currentIndex == index,
-              dish: widget.data.dishesList[index],
-              videoPlayerService: widget.videoPlayerService,);
+            isCurrent: currentIndex == index,
+            dish: widget.data.dishesList[index],
+            videoPlayerService: widget.videoPlayerService,
+          );
         });
   }
 }

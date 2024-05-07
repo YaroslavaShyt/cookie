@@ -25,13 +25,13 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
     super.initState();
     log("videoPlayerController ${widget.videoPlayerController.dataSource}");
     widget.videoPlayerController.initialize().then((value) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         setState(() {
           //   if (widget.videoPlayerController.value.isInitialized) {
           _isInitialized = true;
           //   }
         });
-      });
+    //  });
     });
   }
 
