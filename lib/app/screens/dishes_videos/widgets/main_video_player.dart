@@ -1,5 +1,6 @@
 import 'dart:developer';
-import 'package:cookie/domain/services/ivideo_player_service.dart';
+import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ class MainVideoPlayer extends StatefulWidget {
   final String videoUrl;
   final bool isCurrent;
 
-  final IVideoPlayerService videoPlayerService;
+  final IVideoPlayerHandler videoPlayerService;
 
   const MainVideoPlayer({
     super.key,
@@ -28,24 +29,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        widget.videoPlayerService.initController(videoPath: widget.videoUrl);
-    if (_controller != null) {
-      _controller!.initialize().then((_) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          setState(() {
-            _isInitialized = true;
-            if (widget.isCurrent) {
-              _controller!.play();
-              _isVideoPlaying = true;
-            }
-          });
-        });
-      });
-    }
-
-    //_initializeVideoPlayer();
-    log("VIDEO PLAYER INITED");
+    _initializeVideoPlayer();
   }
 
   @override
@@ -69,34 +53,39 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
     super.dispose();
   }
 
-  // Future<void> _initializeVideoPlayer() async {
-  //   try {
-  //     _controller = await initializeController(path: widget.videoUrl);
-  //     if (_controller != null) {
-  //       if (_controller!.value.isInitialized) {
-  //         if (widget.isCurrent) {
-  //           _controller!.play();
-  //         }
-
-  //         setState(() {
-  //           _isInitialized = true;
-  //           _isVideoPlaying = true;
-  //         });
-  //         _controller!.addListener(() {
-  //           if (!_controller!.value.isPlaying &&
-  //               _controller!.value.isInitialized &&
-  //               _controller!.value.duration == _controller!.value.position) {
-  //             setState(() {
-  //               _isVideoPlaying = false;
-  //             });
-  //           }
-  //         });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     log("Error initializing video player: $error");
-  //   }
-  // }
+  Future<void> _initializeVideoPlayer() async {
+    try {
+      _controller =
+          widget.videoPlayerService.initController(videoPath: widget.videoUrl);
+      if (_controller != null) {
+        _controller!.initialize().then((_) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            if (_controller!.value.isInitialized) {
+              setState(() {
+                _isInitialized = true;
+                if (widget.isCurrent) {
+                  _controller!.play();
+                  _isVideoPlaying = true;
+                }
+              });
+              _controller!.addListener(() {
+                if (!_controller!.value.isPlaying &&
+                    _controller!.value.isInitialized &&
+                    _controller!.value.duration ==
+                        _controller!.value.position) {
+                  setState(() {
+                    _isVideoPlaying = false;
+                  });
+                }
+              });
+            }
+          });
+        });
+      }
+    } catch (error) {
+      log("Error initializing video player: $error");
+    }
+  }
 
   void _playOrPauseVideo() {
     setState(() {
@@ -105,40 +94,41 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
     });
   }
 
-  Future<VideoPlayerController?> initializeController(
-      {required String path}) async {
-    VideoPlayerController controller = VideoPlayerController.network(path);
-    await controller.initialize();
-    return controller;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return _isInitialized &&
-            _controller != null &&
-            _controller!.value.isInitialized
-        ? SafeArea(
-            top: false,
-            left: false,
-            right: false,
-            child: Stack(
-              children: [
-                GestureDetector(
-                  onTap: _playOrPauseVideo,
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    children: [
-                      VideoPlayer(_controller!),
-                      if (!_isVideoPlaying) ...[
-                        const Center(
-                          child: Icon(
-                            Icons.play_arrow,
-                            size: 50.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                      VideoProgressIndicator(
+    if (_isInitialized) {
+      return SafeArea(
+        top: false,
+        left: false,
+        right: false,
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: _playOrPauseVideo,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomEnd,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.orange),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: VideoPlayer(_controller!))),
+                  if (!_isVideoPlaying)
+                    const Center(
+                      child: Icon(
+                        Icons.play_arrow,
+                        size: 50.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  Positioned(
+                    bottom: 20.0,
+                    child: SizedBox(
+                      width: 400,
+                      child: VideoProgressIndicator(
                         _controller!,
                         allowScrubbing: true,
                         colors: const VideoProgressColors(
@@ -146,15 +136,19 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                           bufferedColor: Colors.grey,
                           backgroundColor: Colors.white,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+          ],
+        ),
+      );
+    } else {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
   }
 }

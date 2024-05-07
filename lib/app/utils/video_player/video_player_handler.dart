@@ -1,15 +1,14 @@
 import 'dart:developer';
-
 import 'package:cookie/domain/services/ilocal_storage.dart';
-import 'package:cookie/domain/services/ivideo_player_service.dart';
+import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoPlayerService implements IVideoPlayerService {
+class VideoPlayerHandler implements IVideoPlayerHandler {
   final ILocalStorage _localStorage;
   List<VideoPlayerController> _videoPlayerControllers = [];
 
-  VideoPlayerService({required ILocalStorage localStorage})
+  VideoPlayerHandler({required ILocalStorage localStorage})
       : _localStorage = localStorage;
 
   @override
@@ -34,11 +33,6 @@ class VideoPlayerService implements IVideoPlayerService {
   void clearController(VideoPlayerController controller) {
     controller = VideoPlayerController.network('');
     log("CONTROLLER CLEARED");
-    print("----------------------------");
-    for (var i in _videoPlayerControllers) {
-      log("${i.dataSource}");
-    }
-    print("----------------------------");
   }
 
   @override

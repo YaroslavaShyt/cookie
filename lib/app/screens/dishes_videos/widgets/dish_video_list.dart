@@ -1,14 +1,11 @@
-import 'dart:developer';
 import 'package:cookie/app/screens/dishes_videos/widgets/current_video_indicators.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/main_video_player.dart';
 import 'package:cookie/domain/dish/idish.dart';
-import 'package:cookie/domain/services/ivideo_player_service.dart';
+import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
-import 'package:flutter/foundation.dart';
 
 class DishVideoList extends StatefulWidget {
-  final IVideoPlayerService videoPlayerService;
+  final IVideoPlayerHandler videoPlayerService;
   final IDish dish;
   final bool isCurrent;
 
@@ -24,22 +21,43 @@ class DishVideoList extends StatefulWidget {
 }
 
 class _DishVideoListState extends State<DishVideoList> {
-  late Future<int?> initOperation;
-  int? currentIndex;
-  bool indexSet = false;
+  int? _currentIndex;
+  bool _isIndexSet = false;
+  PageController? _horizontalPageController;
 
   @override
   void initState() {
     super.initState();
+    _loadLastIndex();
+  }
 
-    initOperation = widget.videoPlayerService
-        .loadLastWatchedVideoIndex(categoryName: widget.dish.name);
-    initOperation.then((value) {
+  @override
+  void dispose() {
+    _horizontalPageController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _onHorizontalIndexChanged(int index) async {
+    setState(() {
+      _currentIndex = index;
+    });
+    if (widget.isCurrent) {
+      await widget.videoPlayerService.saveWatchedVideoHistory(
+          categoryName: widget.dish.name, index: index);
+    }
+  }
+
+  void _loadLastIndex() {
+    widget.videoPlayerService
+        .loadLastWatchedVideoIndex(categoryName: widget.dish.name)
+        .then((value) {
       WidgetsBinding.instance.addPostFrameCallback((timestamp) {
         setState(() {
           final savedIndex = value ?? 1;
-          currentIndex = savedIndex;
-          indexSet = true;
+          _currentIndex = savedIndex;
+          _horizontalPageController = PageController(
+              viewportFraction: 0.8, initialPage: _currentIndex!);
+          _isIndexSet = true;
         });
       });
     });
@@ -47,37 +65,17 @@ class _DishVideoListState extends State<DishVideoList> {
 
   @override
   Widget build(BuildContext context) {
-    if (indexSet) {
-      log(currentIndex.toString());
-      PageController horizontalPageController =
-          PageController(viewportFraction: 0.8, initialPage: currentIndex!);
+    if (_isIndexSet) {
       return Column(
         children: [
           Expanded(
             child: PageView.builder(
-              controller: horizontalPageController,
-              onPageChanged: (index) async {
-                setState(() {
-                  currentIndex = index;
-                });
-                widget.isCurrent
-                    ? await widget.videoPlayerService.saveWatchedVideoHistory(
-                        categoryName: widget.dish.name, index: index)
-                    : null;
-              },
+              controller: _horizontalPageController,
+              onPageChanged: _onHorizontalIndexChanged,
               scrollDirection: Axis.horizontal,
               itemCount: widget.dish.videos.length,
               itemBuilder: (context, index) {
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: currentIndex == index || widget.isCurrent
-                        ? MainVideoPlayer(
-                            isCurrent:
-                                currentIndex == index && widget.isCurrent,
-                            videoUrl: widget.dish.videos[index],
-                            videoPlayerService: widget.videoPlayerService,
-                          )
-                        : const SizedBox());
+                return _buildVideoFrameOrEmptyBox(index);
               },
             ),
           ),
@@ -85,7 +83,7 @@ class _DishVideoListState extends State<DishVideoList> {
             height: 50,
             child: CurrentVideoIndicators(
               quantity: widget.dish.videos.length,
-              selectedIndex: currentIndex!,
+              selectedIndex: _currentIndex!,
             ),
           ),
         ],
@@ -95,5 +93,17 @@ class _DishVideoListState extends State<DishVideoList> {
         child: CircularProgressIndicator(),
       );
     }
+  }
+
+  Widget _buildVideoFrameOrEmptyBox(int index) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: _currentIndex == index || widget.isCurrent
+            ? MainVideoPlayer(
+                isCurrent: _currentIndex == index && widget.isCurrent,
+                videoUrl: widget.dish.videos[index],
+                videoPlayerService: widget.videoPlayerService,
+              )
+            : const SizedBox());
   }
 }
