@@ -3,13 +3,12 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
 class MainVideoPlayer extends StatefulWidget {
-  final VideoPlayerController videoPlayerController;
-  final Function(VideoPlayerController) clearController;
-
+  final String videoUrl;
+  final bool isCurrent;
   const MainVideoPlayer({
     super.key,
-    required this.videoPlayerController,
-    required this.clearController,
+    required this.videoUrl,
+    required this.isCurrent,
   });
 
   @override
@@ -19,48 +18,79 @@ class MainVideoPlayer extends StatefulWidget {
 class _MainVideoPlayerState extends State<MainVideoPlayer> {
   bool _isVideoPlaying = false;
   bool _isInitialized = false;
+  VideoPlayerController? _controller;
 
   @override
   void initState() {
     super.initState();
-    log("videoPlayerController ${widget.videoPlayerController.dataSource}");
-    widget.videoPlayerController.initialize().then((value) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        if (widget.videoPlayerController.value.isInitialized) {
-          setState(() {
-            _isInitialized = true;
-          });
-        }
-      });
-    });
+    _initializeVideoPlayer();
+    log("VIDEO PLAYER INITED");
   }
 
   @override
-  void didChangeDependencies() {
-    widget.videoPlayerController.pause();
-    log("VIDEO PLAYER DID CHANGE DEPENDENCIES");
-    super.didChangeDependencies();
+  void didUpdateWidget(MainVideoPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isCurrent) {
+      _isVideoPlaying = true;
+      _controller?.play();
+    }
   }
 
   @override
   void dispose() {
-    widget.clearController(widget.videoPlayerController);
-    log("VIDEO PLAYER CLEARED CONTROLLER");
+    _controller?.dispose();
+    log("VIDEO PLAYER DISPOSED");
     super.dispose();
+  }
+
+  Future<void> _initializeVideoPlayer() async {
+    try {
+      _controller = await initializeController(path: widget.videoUrl);
+      if (_controller != null) {
+        if (_controller!.value.isInitialized) {
+          if (widget.isCurrent) {
+            _controller!.play();
+          }
+
+          setState(() {
+            _isInitialized = true;
+            _isVideoPlaying = true;
+          });
+          _controller!.addListener(() {
+            if (!_controller!.value.isPlaying &&
+                _controller!.value.isInitialized &&
+                _controller!.value.duration == _controller!.value.position) {
+              setState(() {
+                _isVideoPlaying = false;
+              });
+            }
+          });
+        }
+      }
+    } catch (error) {
+      log("Error initializing video player: $error");
+    }
   }
 
   void _playOrPauseVideo() {
     setState(() {
-      _isVideoPlaying
-          ? widget.videoPlayerController.pause()
-          : widget.videoPlayerController.play();
+      _isVideoPlaying ? _controller!.pause() : _controller!.play();
       _isVideoPlaying = !_isVideoPlaying;
     });
   }
 
+  Future<VideoPlayerController?> initializeController(
+      {required String path}) async {
+    VideoPlayerController controller = VideoPlayerController.network(path);
+    await controller.initialize();
+    return controller;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _isInitialized && widget.videoPlayerController.value.isInitialized
+    return _isInitialized &&
+            _controller != null &&
+            _controller!.value.isInitialized
         ? SafeArea(
             top: false,
             left: false,
@@ -72,7 +102,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                   child: Stack(
                     alignment: AlignmentDirectional.bottomEnd,
                     children: [
-                      VideoPlayer(widget.videoPlayerController),
+                      VideoPlayer(_controller!),
                       if (!_isVideoPlaying) ...[
                         const Center(
                           child: Icon(
@@ -83,7 +113,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                         ),
                       ],
                       VideoProgressIndicator(
-                        widget.videoPlayerController,
+                        _controller!,
                         allowScrubbing: true,
                         colors: const VideoProgressColors(
                           playedColor: Colors.orange,

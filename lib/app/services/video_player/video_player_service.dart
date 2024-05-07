@@ -20,15 +20,16 @@ class VideoPlayerService implements IVideoPlayerService {
   }
 
   @override
-  VideoPlayerController initController({required String videoPath}) {
-    VideoPlayerController controller = _videoPlayerControllers
-        .firstWhere((element) => element.dataSource == "");
-    controller = VideoPlayerController.network(videoPath);
+  VideoPlayerController initController({required String videoPath, required VideoPlayerController controller}) {
+    // VideoPlayerController controller = _videoPlayerControllers
+    //     .firstWhere((element) => element.dataSource == "");
+    controller = VideoPlayerController.contentUri(Uri.parse(videoPath));
     return controller;
   }
 
+  @override
   VideoPlayerController get controller => _videoPlayerControllers
-      .firstWhere((element) => element.dataSource.isNotEmpty);
+      .firstWhere((element) => element.dataSource.isEmpty);
 
   @override
   void clearController(VideoPlayerController controller) {

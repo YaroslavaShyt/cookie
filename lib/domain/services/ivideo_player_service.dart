@@ -6,7 +6,10 @@ abstract interface class IVideoPlayerService {
   void spawnControllers({required int quantity}); // spawn 5 empty controllers
 
   VideoPlayerController initController(
-      {required String videoPath}); // init empty controller -> non-empty
+      {required String videoPath, required VideoPlayerController
+          controller}); // init empty controller -> non-empty
+
+  VideoPlayerController get controller;
 
   void clearController(VideoPlayerController controller);
   void disposeControllers();
