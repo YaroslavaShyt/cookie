@@ -11,7 +11,7 @@ class DishesVideosScreen extends StatelessWidget {
     return Scaffold(
       body: DishCategoriesList(
         data: viewModel.dishData,
-        videoPlayerService: viewModel.videoPlayerHandler,
+        videoControllerHandler: viewModel.videoControllerHandler,
       ),
     );
   }

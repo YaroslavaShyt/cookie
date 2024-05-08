@@ -1,5 +1,5 @@
 import 'package:cookie/app/services/locator/locator.dart';
-import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
+import 'package:cookie/app/utils/video_player/ivideo_controllers_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:cookie/app/screens/dishes_videos/dishes_videos_screen.dart';
@@ -11,7 +11,7 @@ class DishesVideosFactory {
     return ChangeNotifierProvider(
         create: (_) => DishesVideoViewModel(
           dishData: dishData,  
-          videoPlayerHandler: locator.get<IVideoPlayerHandler>()    
+          videoControllerHandler: locator.get<IVideoControllersHandler>()    
         ),
         child: Consumer<DishesVideoViewModel>(
           builder: (context, model, child) {

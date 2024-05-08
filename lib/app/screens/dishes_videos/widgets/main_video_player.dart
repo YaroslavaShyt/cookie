@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
-import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cookie/app/utils/video_player/ivideo_controllers_handler.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
@@ -8,13 +8,13 @@ class MainVideoPlayer extends StatefulWidget {
   final String videoUrl;
   final bool isCurrent;
 
-  final IVideoPlayerHandler videoPlayerService;
+  final IVideoControllersHandler videoControllerHandler;
 
   const MainVideoPlayer({
     super.key,
     required this.videoUrl,
     required this.isCurrent,
-    required this.videoPlayerService,
+    required this.videoControllerHandler,
   });
 
   @override
@@ -38,15 +38,17 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
     if (widget.isCurrent) {
       setState(() {
         _isVideoPlaying = true;
-        _controller?.play();
       });
+      _controller?.play();
+      log("IS PLAYING: $_isVideoPlaying");
     }
   }
 
   @override
   void dispose() {
     if (_controller != null) {
-      widget.videoPlayerService.clearController(_controller!);
+      _controller!.removeListener(_onVideoStateChanged);
+      widget.videoControllerHandler.clearController(_controller!);
     }
     _controller?.dispose();
     log("VIDEO PLAYER DISPOSED");
@@ -55,27 +57,18 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
 
   Future<void> _initializeVideoPlayer() async {
     try {
-      _controller =
-          widget.videoPlayerService.initController(videoPath: widget.videoUrl);
+      _controller = widget.videoControllerHandler
+          .initController(videoPath: widget.videoUrl);
       if (_controller != null) {
         _controller!.initialize().then((_) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             if (_controller!.value.isInitialized) {
               setState(() {
+                _controller!.addListener(_onVideoStateChanged);
                 _isInitialized = true;
-                _controller!.addListener(() {
-                  if (!_controller!.value.isPlaying &&
-                      _controller!.value.isInitialized &&
-                      _controller!.value.duration ==
-                          _controller!.value.position) {
-                    setState(() {
-                      _isVideoPlaying = false;
-                    });
-                  }
-                });
                 if (widget.isCurrent) {
-                  _controller!.play();
                   _isVideoPlaying = true;
+                  _controller!.play();
                 }
               });
             }
@@ -84,6 +77,20 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
       }
     } catch (error) {
       log("Error initializing video player: $error");
+    }
+  }
+
+  void _onVideoStateChanged() {
+    if (!_controller!.value.isPlaying &&
+        _controller!.value.isInitialized &&
+        _controller!.value.duration == _controller!.value.position) {
+      setState(() {
+        _isVideoPlaying = false;
+      });
+    } else {
+      setState(() {
+        _isVideoPlaying = true;
+      });
     }
   }
 
@@ -110,8 +117,8 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                 children: [
                   Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.orange),
-                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(color: Colors.orange, width: 5.0),
+                        borderRadius: BorderRadius.circular(25.0),
                       ),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
@@ -125,9 +132,11 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                       ),
                     ),
                   Positioned(
-                    bottom: 20.0,
+                    bottom: 35.0,
+                    left: 20,
+                    right: 20,
                     child: SizedBox(
-                      width: 400,
+                      width: 280,
                       child: VideoProgressIndicator(
                         _controller!,
                         allowScrubbing: true,
@@ -138,7 +147,7 @@ class _MainVideoPlayerState extends State<MainVideoPlayer> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

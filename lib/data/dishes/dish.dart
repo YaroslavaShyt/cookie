@@ -25,7 +25,7 @@ class Dish implements IDish {
     return Dish(
         id: data[Keys.keyId],
         name: data[Keys.keyName],
-        videos: data[Keys.keyVideos],
+        videos: data[Keys.keyVideos], // [{"thumbnail" : "/https", "video": "/https"}, {"thumbnail": "/https", "video": "/https"}]
         image: data[Keys.keyImage]);
   }
 

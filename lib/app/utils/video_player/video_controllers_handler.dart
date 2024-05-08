@@ -1,14 +1,14 @@
 import 'dart:developer';
 import 'package:cookie/domain/services/ilocal_storage.dart';
-import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
+import 'package:cookie/app/utils/video_player/ivideo_controllers_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoPlayerHandler implements IVideoPlayerHandler {
+class VideoControllersHandler implements IVideoControllersHandler {
   final ILocalStorage _localStorage;
   List<VideoPlayerController> _videoPlayerControllers = [];
 
-  VideoPlayerHandler({required ILocalStorage localStorage})
+  VideoControllersHandler({required ILocalStorage localStorage})
       : _localStorage = localStorage;
 
   @override
@@ -18,11 +18,15 @@ class VideoPlayerHandler implements IVideoPlayerHandler {
   }
 
   @override
-  VideoPlayerController initController({required String videoPath}) {
-    VideoPlayerController controller = _videoPlayerControllers
-        .firstWhere((element) => element.dataSource == "");
-    controller = VideoPlayerController.contentUri(Uri.parse(videoPath));
-    return controller;
+  VideoPlayerController? initController({required String videoPath}) {
+    int index = _videoPlayerControllers
+        .indexWhere(((element) => element.dataSource == ""));
+    if (index >= 0) {
+      _videoPlayerControllers[index] =
+          VideoPlayerController.contentUri(Uri.parse(videoPath));
+      return _videoPlayerControllers[index];
+    }
+    return null;
   }
 
   @override
@@ -31,8 +35,12 @@ class VideoPlayerHandler implements IVideoPlayerHandler {
 
   @override
   void clearController(VideoPlayerController controller) {
-    controller = VideoPlayerController.network('');
-    log("CONTROLLER CLEARED");
+    int index = _videoPlayerControllers
+        .indexWhere(((element) => element.dataSource == controller.dataSource));
+    if (index >= 0) {
+      _videoPlayerControllers[index] = VideoPlayerController.network('');
+      log("CONTROLLER CLEARED ${controller.dataSource}");
+    }
   }
 
   @override

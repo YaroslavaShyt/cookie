@@ -1,10 +1,10 @@
 import 'package:video_player/video_player.dart';
 
-abstract interface class IVideoPlayerHandler {
+abstract interface class IVideoControllersHandler {
   List<VideoPlayerController?> get videoPlayerControllers;
   VideoPlayerController get controller;
 
-  VideoPlayerController initController(
+  VideoPlayerController? initController(
       {required String videoPath}); 
 
   void spawnControllers({required int quantity});

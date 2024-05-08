@@ -1,16 +1,16 @@
-import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
+import 'package:cookie/app/utils/video_player/ivideo_controllers_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/dish_video_list.dart';
 import 'package:cookie/domain/dish/idishes_data.dart';
 
 class DishCategoriesList extends StatefulWidget {
-  final IVideoPlayerHandler videoPlayerService;
+  final IVideoControllersHandler videoControllerHandler;
   final IDishData data;
 
   const DishCategoriesList({
     super.key,
     required this.data,
-    required this.videoPlayerService,
+    required this.videoControllerHandler,
   });
 
   @override
@@ -25,17 +25,17 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
   void initState() {
     super.initState();
     verticalPageController = PageController(viewportFraction: 0.9);
-    widget.videoPlayerService.spawnControllers(quantity: 6);
+    widget.videoControllerHandler.spawnControllers(quantity: 6);
   }
 
   @override
   void dispose() {
     verticalPageController?.dispose();
-    widget.videoPlayerService.disposeControllers();
+    widget.videoControllerHandler.disposeControllers();
     super.dispose();
   }
 
-  void _onVerticalIndexChanged(int index){
+  void _onVerticalIndexChanged(int index) {
     setState(() {
       _currentIndex = index;
     });
@@ -52,7 +52,7 @@ class _DishCategoriesListState extends State<DishCategoriesList> {
           return DishVideoList(
             isCurrent: _currentIndex == index,
             dish: widget.data.dishesList[index],
-            videoPlayerService: widget.videoPlayerService,
+            videoControllerHandler: widget.videoControllerHandler,
           );
         });
   }

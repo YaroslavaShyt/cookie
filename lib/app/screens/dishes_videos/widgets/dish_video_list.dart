@@ -1,18 +1,20 @@
 import 'package:cookie/app/screens/dishes_videos/widgets/current_video_indicators.dart';
 import 'package:cookie/app/screens/dishes_videos/widgets/main_video_player.dart';
+import 'package:cookie/app/screens/dishes_videos/widgets/thumbnail.dart';
+import 'package:cookie/data/models/keys.dart';
 import 'package:cookie/domain/dish/idish.dart';
-import 'package:cookie/app/utils/video_player/ivideo_player_handler.dart';
+import 'package:cookie/app/utils/video_player/ivideo_controllers_handler.dart';
 import 'package:flutter/material.dart';
 
 class DishVideoList extends StatefulWidget {
-  final IVideoPlayerHandler videoPlayerService;
+  final IVideoControllersHandler videoControllerHandler;
   final IDish dish;
   final bool isCurrent;
 
   const DishVideoList({
     super.key,
     required this.dish,
-    required this.videoPlayerService,
+    required this.videoControllerHandler,
     required this.isCurrent,
   });
 
@@ -42,13 +44,13 @@ class _DishVideoListState extends State<DishVideoList> {
       _currentIndex = index;
     });
     if (widget.isCurrent) {
-      await widget.videoPlayerService.saveWatchedVideoHistory(
+      await widget.videoControllerHandler.saveWatchedVideoHistory(
           categoryName: widget.dish.name, index: index);
     }
   }
 
   void _loadLastIndex() {
-    widget.videoPlayerService
+    widget.videoControllerHandler
         .loadLastWatchedVideoIndex(categoryName: widget.dish.name)
         .then((value) {
       WidgetsBinding.instance.addPostFrameCallback((timestamp) {
@@ -101,9 +103,10 @@ class _DishVideoListState extends State<DishVideoList> {
         child: _currentIndex == index || widget.isCurrent
             ? MainVideoPlayer(
                 isCurrent: _currentIndex == index && widget.isCurrent,
-                videoUrl: widget.dish.videos[index],
-                videoPlayerService: widget.videoPlayerService,
+                videoUrl: widget.dish.videos[index][Keys.keyVideo],
+                videoControllerHandler: widget.videoControllerHandler,
               )
-            : const SizedBox());
+            : Thumbnail(
+                imageUrl: widget.dish.videos[index][Keys.keyThumbnail]));
   }
 }
