@@ -29,9 +29,7 @@ class VideoControllersHandler implements IVideoControllersHandler {
     return null;
   }
 
-  @override
-  VideoPlayerController get controller => _videoPlayerControllers
-      .firstWhere((element) => element.dataSource.isNotEmpty);
+
 
   @override
   void clearController(VideoPlayerController controller) {
